@@ -33,8 +33,8 @@ class Simulator:
         self.data.ctrl[:] = 0
 
     def set_floor_friction(self, friction: float) -> None:
-        self.model.geom("floor").friction[0] = friction
-        self.model.geom("floor").priority = 1
+        self.model.geom("ground").friction[0] = friction
+        self.model.geom("ground").priority = 1
 
     def self_collisions(self) -> float:
         forcetorque = np.zeros(6)
@@ -75,7 +75,7 @@ class Simulator:
             float: joint position
         """
         addr = self.model.jnt_qposadr[self.dofs_to_index[name]]
-        return self.data.qpos[addr+3:addr+7]
+        return self.data.qpos[addr]
 
     def get_qdot(self, name: str) -> float:
         """
@@ -276,16 +276,22 @@ class Simulator:
 if __name__ == "__main__":
     sim = Simulator()
     sim.step()
-    sim.set_T_world_site("imu", np.eye(4))
-    sim.step()
- 
+
+    sim.reset_velocity()
     start = time.time()
     while True:
         sim.render(True)
         # sim.set_control("head_yaw", np.sin(sim.t))
         # sim.set_control("head_pitch", np.sin(sim.t))
-        # sim.step()
+        sim.reset_velocity()
+        sim.set_q("l_hip_pitch_joint", sim.t)
+        sim.set_q("r_hip_pitch_joint", sim.t)
+        sim.step()
+
+        quat = sim.get_q("l_hip_pitch_joint")
+        print(quat)
 
         elapsed = time.time() - start
         frames = sim.frame
-        # print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+        print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+        time.sleep(0.02)

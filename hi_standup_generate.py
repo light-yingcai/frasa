@@ -3,12 +3,11 @@ import pickle
 import time
 
 import gymnasium as gym
+import hi_env
 
-import frasa_env
+gym.register_envs(hi_env)
 
-gym.register_envs(frasa_env)
-
-env = gym.make("frasa-standup-v0")
+env = gym.make("hi-standup-v0")
 configs: list = []
 filename: str = env.unwrapped.get_initial_config_filename()
 
