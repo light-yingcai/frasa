@@ -19,9 +19,6 @@ try:
         env.reset(options={"use_cache": False})
         configs.append([env.unwrapped.sim.data.qpos.copy(), env.unwrapped.sim.data.ctrl.copy()])
 
-        env.unwrapped.sim.render(True)
-        time.sleep(2)
-
         if len(configs) % 100 == 0:
             print(f"Generated {len(configs)} initial in the file {filename}")
             pickle.dump(configs, open(filename, "wb"))

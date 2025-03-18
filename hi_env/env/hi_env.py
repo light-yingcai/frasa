@@ -28,7 +28,7 @@ class HiEnv(gymnasium.Env):
             "render_realtime": True,
             # Target robot state (q_motors, tilt) [rad^6]
             # [elbow, shoulder_pitch, hip_pitch, knee, ankle_pitch, IMU_pitch]
-            "desired_state": np.deg2rad([-49.5, 19.5, -52, 79, -36.5, -8.5]),
+            "desired_state": np.deg2rad([0, 0, 0, 0, 0, 0]),
             # Probability of seeding the robot in finale position
             "reset_final_p": 0.1,
             # Termination conditions
@@ -211,6 +211,8 @@ class HiEnv(gymnasium.Env):
     def step(self, action):
         action = np.array(action)
 
+        print("step action:", action)
+
         # Current control
         start_ctrl = [self.sim.get_control(f"l_{dof}") for dof in self.dofs]
 
@@ -388,21 +390,28 @@ class HiEnv(gymnasium.Env):
             initial_q[4] -= offset
 
         initial_q = np.clip(initial_q, self.range_low, self.range_high)
+        print("init qpos:", initial_q)
+        
         self.apply_control(initial_q)
 
         # Set the robot initial pose
         self.sim.step()
+        self.sim.render(True)
         initial_tilt = self.np_random.uniform(-np.pi / 2, np.pi / 2)
         if target:
             initial_tilt = my_target[-1]
         T_world_trunk = tf.rotation_matrix(initial_tilt, [0, 1, 0])
-        T_world_trunk[:3, 3] = [0, 0, 0.4]
+        T_world_trunk[:3, 3] = [0, 0, 0.2]
 
-        self.sim.set_T_world_site("imu", T_world_trunk)
+        # self.sim.set_T_world_site("imu", T_world_trunk)
 
         # Wait for the robot to stabilize
+        print("stabilizing: ", self.options["stabilization_time"])
+
         for _ in range(round(self.options["stabilization_time"] / self.sim.dt)):
             self.sim.step()
+            self.sim.render(True)
+
 
     def reset(
         self,
@@ -423,6 +432,7 @@ class HiEnv(gymnasium.Env):
         # Initial robot configuration
         if use_cache and self.initial_config is not None:
             qpos, ctrl = random.choice(self.initial_config)
+            qpos[0:3] = np.zeros(3)
             self.sim.data.qpos = qpos
             self.sim.data.ctrl = ctrl
             self.sim.data.qvel *= 0

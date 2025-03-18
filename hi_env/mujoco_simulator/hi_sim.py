@@ -29,6 +29,7 @@ class Simulator:
         self.viewer = None
         self.t: float = 0.0
         self.dt: float = self.model.opt.timestep
+        print("self dt   ........", self.dt)
         self.frame: int = 0
         self.data.ctrl[:] = 0
 
@@ -278,20 +279,24 @@ if __name__ == "__main__":
     sim.step()
 
     sim.reset_velocity()
+    sim.data.qpos = np.zeros(sim.model.nq)
+    sim.data.qpos[0] = 0.0
+    sim.data.qpos[1] = 0.0
+    sim.data.qpos[2] = 0.1
+    sim.data.qvel = np.zeros(sim.model.nv)
     start = time.time()
     while True:
         sim.render(True)
         # sim.set_control("head_yaw", np.sin(sim.t))
         # sim.set_control("head_pitch", np.sin(sim.t))
-        sim.reset_velocity()
-        sim.set_q("l_hip_pitch_joint", sim.t)
-        sim.set_q("r_hip_pitch_joint", sim.t)
-        sim.step()
+        # sim.reset_velocity()
 
-        quat = sim.get_q("l_hip_pitch_joint")
-        print(quat)
+        # print(sim.data.qpos)    
+        # sim.data.qvel = np.zeros(sim.model.nv)
+        # print(sim.data.qvel)
+        sim.step()
 
         elapsed = time.time() - start
         frames = sim.frame
         print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
-        time.sleep(0.02)
+        # time.sleep(0.02)
