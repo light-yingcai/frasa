@@ -105,6 +105,10 @@ python train_sbx.py \
     --conf hyperparams/crossq.yml
 ```
 
+```bash
+python hi_train.py --algo crossq --env hi-standup-v0 --conf hyperparams/crossq.yml
+```
+
 Where the arguments are:
 * `algo`: The RL algorithm to use
 * `env`: The environment to train on
@@ -126,6 +130,10 @@ python enjoy_sbx.py \
     --folder logs/ \
     --load-best \
     --exp-id 0
+```
+
+```bash
+python hi_enjoy.py --algo crossq --env hi-standup-v0 --gym-packages hi_env --folder logs/ --load-best --exp-id 0
 ```
 
 <img src="https://github.com/user-attachments/assets/05655c5e-64e9-48f4-8f53-d401a03ba40e" align="right" height="250px">

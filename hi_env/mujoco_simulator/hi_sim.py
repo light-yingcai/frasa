@@ -23,8 +23,6 @@ class Simulator:
         joints = len(self.model.jnt_pos)
         self.dofs = [[k, self.model.jnt(k).name] for k in range(1, joints)]
         self.dofs_to_index = {dof: k for k, dof in self.dofs}
-        print(self.dofs)
-        print(self.dofs_to_index)
 
         self.viewer = None
         self.t: float = 0.0
@@ -138,7 +136,7 @@ class Simulator:
         Returns:
             np.ndarray: gyroscope data
         """
-        return self.data.sensor("gyro").data
+        return self.data.sensor("angular-velocity").data
 
     def get_T_world_body(self, body_name: str) -> np.ndarray:
         """

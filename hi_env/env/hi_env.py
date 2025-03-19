@@ -211,8 +211,6 @@ class HiEnv(gymnasium.Env):
     def step(self, action):
         action = np.array(action)
 
-        print("step action:", action)
-
         # Current control
         start_ctrl = [self.sim.get_control(f"l_{dof}") for dof in self.dofs]
 
@@ -396,7 +394,7 @@ class HiEnv(gymnasium.Env):
 
         # Set the robot initial pose
         self.sim.step()
-        self.sim.render(True)
+        # self.sim.render(True)
         initial_tilt = self.np_random.uniform(-np.pi / 2, np.pi / 2)
         if target:
             initial_tilt = my_target[-1]
@@ -410,7 +408,7 @@ class HiEnv(gymnasium.Env):
 
         for _ in range(round(self.options["stabilization_time"] / self.sim.dt)):
             self.sim.step()
-            self.sim.render(True)
+            # self.sim.render(True)
 
 
     def reset(
