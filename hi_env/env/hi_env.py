@@ -28,7 +28,8 @@ class HiEnv(gymnasium.Env):
             "render_realtime": True,
             # Target robot state (q_motors, tilt) [rad^6]
             # [elbow, shoulder_pitch, hip_pitch, knee, ankle_pitch, IMU_pitch]
-            "desired_state": np.deg2rad([0, 0, 0, 0, 0, 0]),
+            # "arm_roll_joint", "shoulder_pitch_joint", "hip_pitch_joint", "knee_joint", "ankle_pitch_joint"]
+            "desired_state": np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
             # Probability of seeding the robot in finale position
             "reset_final_p": 0.1,
             # Termination conditions
@@ -70,6 +71,9 @@ class HiEnv(gymnasium.Env):
         self.right_actuators_indexes = [self.sim.get_actuator_index(f"r_{dof}") for dof in self.dofs]
         self.range_low = np.array([r[0] for r in self.ranges])
         self.range_high = np.array([r[1] for r in self.ranges])
+
+        # define mask to disable all other joints
+        self.mask_dofs = ["arm_yaw_joint", "shoulder_roll_joint", "hip_roll_joint", "hip_yaw_joint"]
 
         # Action space is q
         max_variation = self.options["dt"] * self.options["vmax"]
@@ -394,7 +398,9 @@ class HiEnv(gymnasium.Env):
 
         # Set the robot initial pose
         self.sim.step()
-        # self.sim.render(True)
+        print("tilt:", self.get_tilt())
+        self.sim.render(True)
+        
         initial_tilt = self.np_random.uniform(-np.pi / 2, np.pi / 2)
         if target:
             initial_tilt = my_target[-1]
@@ -406,9 +412,10 @@ class HiEnv(gymnasium.Env):
         # Wait for the robot to stabilize
         print("stabilizing: ", self.options["stabilization_time"])
 
-        for _ in range(round(self.options["stabilization_time"] / self.sim.dt)):
+        for _ in range(round(self.options["stabilization_time"] / self.sim.dt)):    
             self.sim.step()
-            # self.sim.render(True)
+            print("tilt:", self.get_tilt())
+            self.sim.render(True)
 
 
     def reset(

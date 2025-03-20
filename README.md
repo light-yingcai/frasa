@@ -106,7 +106,7 @@ python train_sbx.py \
 ```
 
 ```bash
-python hi_train.py --algo crossq --env hi-standup-v0 --conf hyperparams/crossq.yml
+python hi_train.py --algo crossq --env hi-standup-v0 --conf hyperparams/hi_crossq.yml
 ```
 
 Where the arguments are:
