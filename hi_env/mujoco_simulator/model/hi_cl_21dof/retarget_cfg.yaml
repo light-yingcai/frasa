@@ -1,0 +1,65 @@
+robot_rotation_axis:
+  - [0, 1, 0]  # l_hip_pitch_joint
+  - [1, 0, 0]  # l_hip_roll_joint
+  - [0, 0, 1]  # l_hip_yaw_joint
+  - [0, 1, 0]  # l_knee_joint
+  - [0, 1, 0]  # l_ankle_pitch_joint
+  - [1, 0, 0]  # l_ankle_roll_joint
+  - [0, 1, 0]  # r_hip_pitch_joint
+  - [1, 0, 0]  # r_hip_roll_joint
+  - [0, 0, 1]  # r_hip_yaw_joint
+  - [0, 1, 0]  # r_knee_joint
+  - [0, 1, 0]  # r_ankle_pitch_joint
+  - [1, 0, 0]  # r_ankle_roll_joint
+  - [0, 0, 1]  # torso_joint
+  - [0, 1, 0]  # l_shoulder_pitch_joint
+  - [1, 0, 0]  # l_shoulder_roll_joint
+  - [0, 0, 1]  # l_arm_yaw_joint
+  - [1, 0, 0]  # l_arm_roll_joint
+  - [0, 1, 0]  # r_shoulder_pitch_joint
+  - [1, 0, 0]  # r_shoulder_roll_joint
+  - [0, 0, 1]  # r_arm_yaw_joint
+  - [1, 0, 0]  # r_arm_roll_joint
+
+
+retarget_link_pick:
+  - ["loin_yaw_link", "Torso"]
+  - ["head_link", "Head"]
+  - ["l_hip_pitch_link", "L_Hip"]
+  - ["l_calf_link", "L_Knee"]
+  - ["l_ankle_pitch_link", "L_Ankle"]
+  - ["l_toe_link", "L_Toe"]
+  - ["r_hip_pitch_link", "R_Hip"]
+  - ['r_calf_link', "R_Knee"]
+  - ['r_ankle_pitch_link', "R_Ankle"]
+  - ['r_toe_link', "R_Toe"]
+  - ["l_shoulder_roll_link", "L_Shoulder"]
+  - ["l_arm_roll_link", "L_Elbow"]
+  - ["l_hand_link", "L_Hand"]
+  - ["r_shoulder_roll_link", "R_Shoulder"]
+  - ["r_arm_roll_link", "R_Elbow"]
+  - ["r_hand_link", "R_Hand"]
+
+smpl_fitting_dof:
+  - [0, 0.4]
+  - [3, -0.8]
+  - [4, 0.4]
+  - [6, 0.4]
+  - [9, -0.8]
+  - [10, 0.4]
+
+init_height: 0.52
+
+betas:
+- 1.7975000143051147
+- -3.7051000595092773
+- -1.3878999948501587
+- 3.1775999069213867
+- 16.624500274658203
+- -1.1122000217437744
+- -21.532800674438477
+- 9.73900032043457
+- -33.440799713134766
+- 20.484699249267578
+
+scale: 0.4944409132003784
