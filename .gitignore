@@ -8,5 +8,4 @@ data/
 **/logs
 
 venv/
-**/model/
 **.DS_Store

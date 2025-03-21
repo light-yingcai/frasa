@@ -123,7 +123,7 @@ The trained agent will be stored in `logs\[algo]\[env]_[exp-id]`.
 If a trained agent exists, you can see it in action using:
 
 ```bash
-python enjoy_sbx.py \
+mjpython enjoy_sbx.py \
     --algo crossq \
     --env frasa-standup-v0 \
     --gym-packages frasa_env \
@@ -133,7 +133,7 @@ python enjoy_sbx.py \
 ```
 
 ```bash
-python hi_enjoy.py --algo crossq --env hi-standup-v0 --gym-packages hi_env --folder logs/ --load-best --exp-id 0
+mjpython hi_enjoy.py --algo crossq --env hi-standup-v0 --gym-packages hi_env --folder logs/ --load-best --exp-id 0
 ```
 
 <img src="https://github.com/user-attachments/assets/05655c5e-64e9-48f4-8f53-d401a03ba40e" align="right" height="250px">
