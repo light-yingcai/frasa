@@ -187,6 +187,7 @@ class Simulator:
 
         quat = tf.quaternion_from_matrix(T)
         pos = T[:3, 3]
+        joint.qpos[:] = [*pos, *quat]
 
         self.reset_velocity()
 

@@ -381,7 +381,7 @@ class HiEnv(gymnasium.Env):
             target = self.np_random.random() < self.options["reset_final_p"]
 
         # Selecting a random configuration
-        initial_q = self.np_random.uniform(low=-np.pi, high=np.pi, size=(len(self.dofs),))
+        initial_q = self.np_random.uniform(low=-np.pi, high=0, size=(len(self.dofs),))
 
         # If target, we will use the q_target
         if target:
@@ -397,24 +397,21 @@ class HiEnv(gymnasium.Env):
         self.apply_control(initial_q)
 
         # Set the robot initial pose
-        self.sim.step()
-        print("tilt:", self.get_tilt())
-        self.sim.render(True)
-        
-        initial_tilt = self.np_random.uniform(-np.pi / 2, np.pi / 2)
+        initial_tilt = self.np_random.uniform(0, np.pi / 2)
         if target:
             initial_tilt = my_target[-1]
-        T_world_trunk = tf.rotation_matrix(initial_tilt, [0, 1, 0])
-        T_world_trunk[:3, 3] = [0, 0, 0.2]
 
-        # self.sim.set_T_world_site("imu", T_world_trunk)
+        # self.sim.set_q("torso_joint", initial_tilt)
+        self.sim.reset_velocity()
 
+        self.sim.step()
+        self.sim.render(True)
+        
         # Wait for the robot to stabilize
         print("stabilizing: ", self.options["stabilization_time"])
 
         for _ in range(round(self.options["stabilization_time"] / self.sim.dt)):    
             self.sim.step()
-            print("tilt:", self.get_tilt())
             self.sim.render(True)
 
 
@@ -437,7 +434,6 @@ class HiEnv(gymnasium.Env):
         # Initial robot configuration
         if use_cache and self.initial_config is not None:
             qpos, ctrl = random.choice(self.initial_config)
-            qpos[0:3] = np.zeros(3)
             self.sim.data.qpos = qpos
             self.sim.data.ctrl = ctrl
             self.sim.data.qvel *= 0
