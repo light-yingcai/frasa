@@ -264,6 +264,7 @@ class HiEnv(gymnasium.Env):
             self.q_history.append(q)
 
             self.tilt_history.append(self.get_tilt())
+            # print("tilt: ", self.tilt_history[-1])
             self.dtilt_history.append(self.sim.get_gyro()[1])
 
             if self.render_mode == "human":
@@ -381,7 +382,7 @@ class HiEnv(gymnasium.Env):
             target = self.np_random.random() < self.options["reset_final_p"]
 
         # Selecting a random configuration
-        initial_q = self.np_random.uniform(low=-np.pi, high=0, size=(len(self.dofs),))
+        initial_q = self.np_random.uniform(low=-np.pi/2, high=np.pi/2, size=(len(self.dofs),))
 
         # If target, we will use the q_target
         if target:
