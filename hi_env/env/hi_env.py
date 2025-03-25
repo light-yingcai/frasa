@@ -29,7 +29,7 @@ class HiEnv(gymnasium.Env):
             # Target robot state (q_motors, tilt) [rad^6]
             # [elbow, shoulder_pitch, hip_pitch, knee, ankle_pitch, IMU_pitch]
             # "arm_roll_joint", "shoulder_pitch_joint", "hip_pitch_joint", "knee_joint", "ankle_pitch_joint"]
-            "desired_state": np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
+            "desired_state": [0, 0, 0.4, -0.8, 0.4, 0], #np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
             # Probability of seeding the robot in finale position
             "reset_final_p": 0.1,
             # Termination conditions
