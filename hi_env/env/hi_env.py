@@ -21,7 +21,7 @@ class HiEnv(gymnasium.Env):
             # Duration of the episode before truncation [s]
             "truncate_duration": 5.0,
             # Period for the agent to apply control [s]
-            "dt": 0.05,
+            "dt": 0.02,
             # Maximum command angular velocity [rad/s]
             "vmax": 2 * np.pi,
             # Is the render done in "realtime"
@@ -29,7 +29,7 @@ class HiEnv(gymnasium.Env):
             # Target robot state (q_motors, tilt) [rad^6]
             # [elbow, shoulder_pitch, hip_pitch, knee, ankle_pitch, IMU_pitch]
             # "arm_roll_joint", "shoulder_pitch_joint", "hip_pitch_joint", "knee_joint", "ankle_pitch_joint"]
-            "desired_state": [0, 0, 0, 0, 0, 0], #np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
+            "desired_state": [0, 0, -1, 0.7, 0, 1.5], #np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
             # Probability of seeding the robot in finale position
             "reset_final_p": 0.1,
             # Termination conditions
@@ -265,7 +265,6 @@ class HiEnv(gymnasium.Env):
             self.q_history.append(q)
 
             self.tilt_history.append(self.get_tilt())
-            # print("tilt: ", self.tilt_history[-1])
             self.dtilt_history.append(self.sim.get_gyro()[1])
 
             if self.render_mode == "human":
@@ -295,8 +294,11 @@ class HiEnv(gymnasium.Env):
         obs = self.get_observation()
 
         state_current = [*self.q_history[-1], self.tilt_history[-1]]
+        reward = np.exp(-0.2 * (np.linalg.norm(np.array(state_current) - np.array(self.options["desired_state"])) ** 2))
 
-        reward = np.exp(-20 * (np.linalg.norm(np.array(state_current) - np.array(self.options["desired_state"])) ** 2))
+        # print("state current:", *state_current)
+        # print("desired state:", *self.options["desired_state"])
+        # print("reward 1:", reward)
 
         action_variation = np.abs(action - self.previous_actions[-1])
         self.previous_actions.append(action)
@@ -323,11 +325,17 @@ class HiEnv(gymnasium.Env):
             # Penalizing action variation
             reward += np.exp(-np.linalg.norm(action_variation)) * 5e-2
 
+        # print("reward 2:", reward)
+
         # No self collisions reward
         reward += np.exp(-self.sim.self_collisions()) * 1e-1
+        
+        # print("reward 3:", reward)
 
         # Terminating the episode after the trucate_duration
         terminated = self.sim.t > self.options["truncate_duration"]
+
+        print("terminated:", terminated)
 
         return obs, reward, done, terminated, {}
 
@@ -414,6 +422,7 @@ class HiEnv(gymnasium.Env):
 
         for _ in range(round(self.options["stabilization_time"] / self.sim.dt)):    
             self.sim.step()
+            print(self.get_tilt())
             self.sim.render(True)
 
 
