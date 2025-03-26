@@ -29,7 +29,7 @@ class HiEnv(gymnasium.Env):
             # Target robot state (q_motors, tilt) [rad^6]
             # [elbow, shoulder_pitch, hip_pitch, knee, ankle_pitch, IMU_pitch]
             # "arm_roll_joint", "shoulder_pitch_joint", "hip_pitch_joint", "knee_joint", "ankle_pitch_joint"]
-            "desired_state": [0, 0, 0.4, -0.8, 0.4, 0], #np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
+            "desired_state": [0, 0, 0, 0, 0, 0], #np.deg2rad([0, 0, 0.4, -0.8, 0.4, 0]),
             # Probability of seeding the robot in finale position
             "reset_final_p": 0.1,
             # Termination conditions
@@ -62,6 +62,7 @@ class HiEnv(gymnasium.Env):
         self.sim = Simulator()
 
         # Degrees of freedom involved
+        # Desired [0, 0, 0.4, -0.8, 0.4, 0]
         self.dofs = ["arm_roll_joint", "shoulder_pitch_joint", "hip_pitch_joint", "knee_joint", "ankle_pitch_joint"]
         self.ranges = [self.sim.model.actuator(f"l_{dof}").ctrlrange for dof in self.dofs]
 
